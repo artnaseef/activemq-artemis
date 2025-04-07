@@ -322,5 +322,8 @@ public class BridgeControlImpl extends AbstractControl implements BridgeControl 
       }
    }
 
-
+   @Override
+   public boolean isConnectionActive() {
+      return bridge.isConnectionActive();
+   }
 }

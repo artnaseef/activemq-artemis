@@ -55,6 +55,8 @@ public interface Bridge extends Consumer, ActiveMQComponent {
 
    boolean isConnected();
 
+   boolean isConnectionActive();
+
    BridgeMetrics getMetrics();
 
    BridgeConfiguration getConfiguration();

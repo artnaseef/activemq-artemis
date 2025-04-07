@@ -140,4 +140,12 @@ public interface BridgeControl extends ActiveMQComponentControl {
    @Attribute(desc = "The metrics for this bridge. The messagesPendingAcknowledgement counter is incremented when the bridge is has forwarded a message but is waiting acknowledgement from the remote broker. The messagesAcknowledged counter is the number of messages actually received by the remote broker.")
    Map<String, Object> getMetrics();
 
+
+   /**
+    * Report the connection state of the bridge.
+    *
+    * @return
+    */
+   @Attribute(desc = "Bridge is actively connected to the remote broker.")
+   boolean isConnectionActive();
 }

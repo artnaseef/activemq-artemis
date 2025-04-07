@@ -142,6 +142,8 @@ public class BridgeImpl implements Bridge, SessionFailureListener, SendAcknowled
 
    private boolean keepConnecting = true;
 
+   private boolean connectionActive;
+
    private final ActiveMQServer server;
 
    private final BridgeMetrics metrics = new BridgeMetrics();
@@ -353,6 +355,11 @@ public class BridgeImpl implements Bridge, SessionFailureListener, SendAcknowled
    @Override
    public boolean isConnected() {
       return session != null;
+   }
+
+   @Override
+   public boolean isConnectionActive() {
+      return this.connectionActive;
    }
 
    /**
@@ -832,6 +839,7 @@ public class BridgeImpl implements Bridge, SessionFailureListener, SendAcknowled
 
    protected void fail(final boolean permanently, boolean scaleDown) {
       logger.debug("{}\n\t::fail being called, permanently={}", this, permanently);
+      this.connectionActive = false;
       //we need to make sure we remove the node from the topology so any incoming quorum requests are voted correctly
       if (targetNodeID != null) {
          this.disconnectedAndDown = true;
@@ -857,6 +865,8 @@ public class BridgeImpl implements Bridge, SessionFailureListener, SendAcknowled
     * Hook for doing extra stuff after connection
     */
    protected void afterConnect() throws Exception {
+      this.connectionActive = true;
+
       if (disconnectedAndDown && targetNodeID != null && targetNode != null) {
          serverLocator.notifyNodeUp(System.currentTimeMillis(), targetNodeID, targetNode.getBackupGroupName(), targetNode.getScaleDownGroupName(),
                                     new Pair<>(targetNode.getPrimary(), targetNode.getBackup()), false);
